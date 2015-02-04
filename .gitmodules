@@ -1,0 +1,3 @@
+[submodule "xblog"]
+	path = xblog
+	url = https://github.com/rubeon/xblog
