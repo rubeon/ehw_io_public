@@ -34,6 +34,7 @@ CUMULUS = {
     'API_KEY': os.environ.get("CUMULUS_PASSWORD", "abcdefghk123123"),
     'CONTAINER': os.environ.get('CUMULUS_CONTAINER', 'my-media-container'),
     'STATIC_CONTAINER': os.environ.get('CUMULUS_STATIC_CONTAINER', 'my-static-container'),
+    'REGION': os.environ.get("CUMULUS_REGION", "DFW"),
     'PYRAX_IDENTITY_TYPE': 'rackspace',
     'USE_PYRAX': True,
     'USE_SSL': True,
