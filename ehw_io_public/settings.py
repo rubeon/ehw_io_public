@@ -61,6 +61,9 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -139,3 +142,8 @@ XMLRPC_METHODS = (
 )
 
 
+DEFAULT_FILE_STORAGE = 'cumulus.storage.SwiftclientStorage'
+STATICFILES_STORAGE = 'cumulus.storage.SwiftclientStaticStorage'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
