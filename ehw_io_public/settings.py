@@ -32,7 +32,7 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_HOSTNAMES", 'localhost 127.0.0.1').split(
 CUMULUS = {
     'USERNAME': os.environ.get("CUMULUS_USERNAME", "clouduser"),
     'API_KEY': os.environ.get("CUMULUS_PASSWORD", "abcdefghk123123"),
-    'CONTAINER': os.environ.get('CUMULUS_CONTAINER', 'my-media-container')
+    'CONTAINER': os.environ.get('CUMULUS_CONTAINER', 'my-media-container'),
     'STATIC_CONTAINER': os.environ.get('CUMULUS_STATIC_CONTAINER', 'my-static-container'),
     'PYRAX_IDENTITY_TYPE': 'rackspace',
     'USE_PYRAX': True,
