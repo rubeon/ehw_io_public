@@ -1,0 +1,1 @@
+This is here to keep collectstatic from failing.
