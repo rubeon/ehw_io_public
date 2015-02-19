@@ -144,7 +144,7 @@ XMLRPC_METHODS = (
 
 DEFAULT_FILE_STORAGE = 'cumulus.storage.SwiftclientStorage'
 STATICFILES_STORAGE = 'cumulus.storage.SwiftclientStaticStorage'
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, "static"),
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, "static"),
 # )
 STATIC_ROOT =   os.path.join(BASE_DIR, "static")
