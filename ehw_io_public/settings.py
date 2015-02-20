@@ -174,10 +174,10 @@ CACHES = {
 }
 
 EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "server1.home.hokeypokeyland.org")
-EMAIL_PORT = os.eniron.get("DJANGO_EMAIL_PORT", "25")
+EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "25")
 
 #FIXME: Add following to init env
 DEFAULT_FROM_EMAIL = os.environ.get("DJANGO_FROM_EMAIL", "Helpdesk <helpdesk@ehw.io>")
 SOCIAL_AUTH_URL_NAMESPACE = os.environ.get('DJANGO_SOCIAL_AUTH_URL_NAMESPACE', 'social')
 SOCIAL_AUTH_TWITTER_KEY = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_KEY')
-SOCIAL_AUTH_TWITTER_SECRET = SOCIAL_AUTH_TWITTER_KEY = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_SECRET')
+SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_SECRET')
