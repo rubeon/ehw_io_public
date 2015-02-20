@@ -148,3 +148,36 @@ STATICFILES_STORAGE = 'cumulus.storage.SwiftclientStaticStorage'
 #     os.path.join(BASE_DIR, "static"),
 # )
 STATIC_ROOT =   os.path.join(BASE_DIR, "static")
+
+# the rest of this could probably be factored out...
+MARKDOWN_DEUX_STYLES = {
+    # default style
+    "default": {'default': {'extras': {'code-friendly': None}, 'safe_mode': 'escape'}},
+    "flatpages" : {
+        'extras': {
+            "footnotes": None,
+        }
+    }
+}
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': os.environ.get('DJANGO_HAYSTACK_ENGINE', 'haystack.backends.whoosh_backend.WhooshEngine'),
+        'PATH': os.environ.get('DJANGO_HAYSTACK_PATH', os.path.join(os.path.dirname(__file__), 'whoosh_index')),
+    },
+}
+
+CACHES = {
+    'default': {
+        'BACKEND':os.environ.get('DJANGO_CACHE_BACKEND', 'django.core.cache.backends.filebased.FileBasedCache'),
+        'LOCATION': os.environ.get('DJANGO_CACHE_LOCATION', '/tmp/django_cache/')
+    }
+}
+
+EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "server1.home.hokeypokeyland.org")
+EMAIL_PORT = os.eniron.get("DJANGO_EMAIL_PORT", "25")
+
+#FIXME: Add following to init env
+DEFAULT_FROM_EMAIL = os.environ.get("DJANGO_FROM_EMAIL", "Helpdesk <helpdesk@ehw.io>")
+SOCIAL_AUTH_URL_NAMESPACE = os.environ.get('DJANGO_SOCIAL_AUTH_URL_NAMESPACE', 'social')
+SOCIAL_AUTH_TWITTER_KEY = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_KEY')
+SOCIAL_AUTH_TWITTER_SECRET = SOCIAL_AUTH_TWITTER_KEY = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_SECRET')
