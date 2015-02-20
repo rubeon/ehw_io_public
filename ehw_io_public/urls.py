@@ -8,4 +8,12 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^blog/', include('xblog.urls'), name='blog'),
+    url(r'^xmlrpc/$', 'django_xmlrpc.views.handle_xmlrpc', name='xmlrpc'),
+    url(r'^xmlrpc.php$', 'django_xmlrpc.views.handle_xmlrpc', name='xmlrpc'),
+    url(r'^mt-xmlrpc.cgi$', 'django_xmlrpc.views.handle_xmlrpc', name='xmlrpc'),
+    url(r'^s/', include('tinylinks.urls')),
+    url('', include('social.apps.django_app.urls', namespace='social')),
+    url(r'^search/', include('haystack.urls'), name="search"),
+    # url(r"^$", TemplateView.as_view(template_name='base.html')),
+    url(r'^$', include('xblog.urls')),
 )
