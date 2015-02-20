@@ -178,6 +178,15 @@ EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "server1.home.hokeypokeyland.or
 EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "25")
 
 #FIXME: Add following to init env
+AUTHENTICATION_BACKENDS = (
+    # 'social.backends.open_id.OpenIdAuth',
+    # 'social.backends.google.GoogleOpenId',
+    # 'social.backends.google.GoogleOAuth2',
+    # 'social.backends.google.GoogleOAuth',
+    'social.backends.twitter.TwitterOAuth',
+    # 'social.backends.yahoo.YahooOpenId',
+    'django.contrib.auth.backends.ModelBackend',
+)
 DEFAULT_FROM_EMAIL = os.environ.get("DJANGO_FROM_EMAIL", "Helpdesk <helpdesk@ehw.io>")
 SOCIAL_AUTH_URL_NAMESPACE = os.environ.get('DJANGO_SOCIAL_AUTH_URL_NAMESPACE', 'social')
 SOCIAL_AUTH_TWITTER_KEY = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_KEY')
