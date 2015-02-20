@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'xblog',
     'social.apps.django_app.default',
+    'django_libs'
 )
 
 MIDDLEWARE_CLASSES = (
