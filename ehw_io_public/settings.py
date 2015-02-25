@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'h&qy8&^*pc=_czm_m_b2=tt3^i$sv17wql8o6k*1@ey38^89)p'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -30,8 +30,8 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_HOSTNAMES", 'localhost 127.0.0.1').split(
 # Application definition
 
 CUMULUS = {
-    'USERNAME': os.environ.get("CUMULUS_USERNAME", "clouduser"),
-    'API_KEY': os.environ.get("CUMULUS_PASSWORD", "abcdefghk123123"),
+    'USERNAME': os.environ.get("CUMULUS_USERNAME"),
+    'API_KEY': os.environ.get("CUMULUS_PASSWORD"),
     'CONTAINER': os.environ.get('CUMULUS_CONTAINER', 'my-media-container'),
     'STATIC_CONTAINER': os.environ.get('CUMULUS_STATIC_CONTAINER', 'my-static-container'),
     'REGION': os.environ.get("CUMULUS_REGION", "DFW"),
@@ -92,8 +92,8 @@ WSGI_APPLICATION = 'ehw_io_public.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DJANGO_DB_ENGINE'),
-        'NAME': os.environ.get('DJANGO_DB_NAME'),
+        'ENGINE': os.environ.get('DJANGO_DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('DJANGO_DB_NAME', os.path.join(BASE_DIR, 'db.sqlite3')),
         'USER': os.environ.get('DJANGO_DB_USER'),
         'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD'),
         'HOST': os.environ.get('DJANGO_DB_HOST'),
@@ -143,8 +143,10 @@ XMLRPC_METHODS = (
 )
 
 
-DEFAULT_FILE_STORAGE = 'cumulus.storage.SwiftclientStorage'
-STATICFILES_STORAGE = 'cumulus.storage.SwiftclientStaticStorage'
+# check to see if the user has created a cumulus user
+if CUMULUS['USERNAME']:
+    DEFAULT_FILE_STORAGE = 'cumulus.storage.SwiftclientStorage'
+    STATICFILES_STORAGE = 'cumulus.storage.SwiftclientStaticStorage'
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, "static"),
 # )
@@ -174,7 +176,7 @@ CACHES = {
     }
 }
 
-EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "server1.home.hokeypokeyland.org")
+EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "localhost")
 EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "25")
 
 #FIXME: Add following to init env
