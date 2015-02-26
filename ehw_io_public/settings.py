@@ -38,7 +38,7 @@ CUMULUS = {
     'PYRAX_IDENTITY_TYPE': 'rackspace',
     'USE_PYRAX': True,
     'USE_SSL': True,
-    'SERVICENET': True,
+    'SERVICENET': False,
 }
 
 INSTALLED_APPS = (
