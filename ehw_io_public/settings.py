@@ -193,3 +193,71 @@ DEFAULT_FROM_EMAIL = os.environ.get("DJANGO_FROM_EMAIL", "Helpdesk <helpdesk@ehw
 SOCIAL_AUTH_URL_NAMESPACE = os.environ.get('DJANGO_SOCIAL_AUTH_URL_NAMESPACE', 'social')
 SOCIAL_AUTH_TWITTER_KEY = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_KEY')
 SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_SECRET')
+
+# all that loggin'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'formatter': 'verbose',
+        },
+        'requestfile': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'request-debug.log'),
+            'formatter': 'verbose',
+        },
+        'xblog_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'xblog.log'),
+            'formatter': 'verbose',
+        },
+         # 'logstash': {
+         #      'level': 'DEBUG',
+         #      'class': 'logstash.LogstashHandler',
+         #      'host': 'localhost',
+         #      'port': 5000, # Default value: 5959
+         #      'version': 0, # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
+         #      'message_type': 'logstash',  # 'type' field in logstash message. Default value: 'logstash'.
+         #      'fqdn': False, # Fully qualified domain name. Default value: false.
+         #      'tags': ['ehwio_dev', 'django'], # list of tags. Default: None.
+         #  },
+    },
+    'loggers': {
+        'django': {
+            'handlers':['file'],
+            'propagate': True,
+            'level':DEBUG and 'DEBUG' or 'INFO',
+        },
+        'xblog': {
+            'handlers': ['xblog_handler'],
+            'level': DEBUG and 'DEBUG' or 'INFO',
+        },
+          'django.request': {
+              'handlers': ['requestfile'],
+              'level': DEBUG and 'DEBUG' or 'INFO',
+              'propagate': True,
+          },
+          'xmlrpc': {
+              "handlers": ['xblog_handler',],
+              'level' : DEBUG and 'DEBUG' or 'INFO',
+              'propagate' : True,
+          }
+
+    },
+    'formatters': {
+            'verbose': {
+                'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+                'datefmt' : "%d/%b/%Y %H:%M:%S"
+            },
+            'simple': {
+                'format': '%(levelname)s %(message)s'
+            },
+        },
+}
