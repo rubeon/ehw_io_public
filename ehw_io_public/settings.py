@@ -147,11 +147,13 @@ XMLRPC_METHODS = (
 if CUMULUS['USERNAME']:
     DEFAULT_FILE_STORAGE = 'cumulus.storage.SwiftclientStorage'
     STATICFILES_STORAGE = 'cumulus.storage.SwiftclientStaticStorage'
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, "static"),
-# )
-STATIC_ROOT =   os.path.join(BASE_DIR, "static")
-
+STATICFILES_DIRS = (
+     os.path.join(BASE_DIR, "ehw_io_static"),
+)
+STATIC_ROOT =   os.path.expanduser("~/~/code/staticfiles/ehwio/")
+STATIC_URL = "/static/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 # the rest of this could probably be factored out...
 MARKDOWN_DEUX_STYLES = {
     # default style
@@ -170,12 +172,13 @@ HAYSTACK_CONNECTIONS = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND':os.environ.get('DJANGO_CACHE_BACKEND', 'django.core.cache.backends.filebased.FileBasedCache'),
-        'LOCATION': os.environ.get('DJANGO_CACHE_LOCATION', '/tmp/django_cache/')
-    }
-}
-
+     'default': {
+         'BACKEND':os.environ.get('DJANGO_CACHE_BACKEND', 'django.core.cache.backends.locmem.LocMemCache'),
+         'LOCATION': os.environ.get('DJANGO_CACHE_LOCATION', '/tmp/django_cache/'),
+         'TIMEOUT':os.environ.get("DJANGO_CACHE_TIMEOUT",1),
+     }
+ }
+ 
 EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "localhost")
 EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "25")
 

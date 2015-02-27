@@ -1,3 +1,4 @@
+from django.conf import settings 
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
@@ -16,4 +17,14 @@ urlpatterns = patterns('',
     url(r'^search/', include('haystack.urls'), name="search"),
     # url(r"^$", TemplateView.as_view(template_name='base.html')),
     url(r'^$', include('xblog.urls')),
+
 )
+
+# if settings.DEBUG:
+#     # static files (images, css, javascript, etc.)
+#     urlpatterns += patterns('',
+#         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+#         'document_root': settings.MEDIA_ROOT}))
+# 
+# urlpatterns +=    patterns('', url(r'^$', include('xblog.urls')),)
+
