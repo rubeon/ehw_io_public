@@ -29,17 +29,39 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_HOSTNAMES", 'localhost 127.0.0.1').split(
 
 # Application definition
 
-CUMULUS = {
-    'USERNAME': os.environ.get("CUMULUS_USERNAME"),
-    'API_KEY': os.environ.get("CUMULUS_PASSWORD"),
-    'CONTAINER': os.environ.get('CUMULUS_CONTAINER', 'my-media-container'),
-    'STATIC_CONTAINER': os.environ.get('CUMULUS_STATIC_CONTAINER', 'my-static-container'),
-    'REGION': os.environ.get("CUMULUS_REGION", "DFW"),
-    'PYRAX_IDENTITY_TYPE': 'rackspace',
-    'USE_PYRAX': True,
-    'USE_SSL': True,
-    'SERVICENET': False,
-}
+if os.environ.get("CUMULUS_USERNAME"):
+    CUMULUS = {
+        'USERNAME': os.environ.get("CUMULUS_USERNAME"),
+        'API_KEY': os.environ.get("CUMULUS_PASSWORD"),
+        'CONTAINER': os.environ.get('CUMULUS_CONTAINER', 'my-media-container'),
+        'STATIC_CONTAINER': os.environ.get('CUMULUS_STATIC_CONTAINER', 'my-static-container'),
+        'REGION': os.environ.get("CUMULUS_REGION", "DFW"),
+        'PYRAX_IDENTITY_TYPE': 'rackspace',
+        'USE_PYRAX': True,
+        'USE_SSL': True,
+        'SERVICENET': False,
+    }
+    DEFAULT_FILE_STORAGE = 'cumulus.storage.SwiftclientStorage'
+    STATICFILES_STORAGE = 'cumulus.storage.SwiftclientStaticStorage'
+    
+if os.environ.get("AWS_STORAGE_BUCKET_NAME"):
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_S3_CUSTOM_DOMAIN = os.environ.get('AWS_S3_CUSTOM_DOMAIN')
+    STATIC_URL = os.environ.get('STATIC_URL')
+    STATICFILES_STORAGE = os.environ.get('STATICFILES_STORAGE')
+    DEFAULT_FILE_STORAGE = os.environ.get('STATICFILES_STORAGE')
+    AWS_IS_GZIPPED = True
+    MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+
+
+STATICFILES_DIRS = (
+     os.path.join(BASE_DIR, "ehw_io_static"),
+)
+STATIC_ROOT = os.path.join(BASE_DIR, "staticroot")
+STATIC_URL = "/static/"
+
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -50,7 +72,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'cumulus',
+    # 'cumulus',
+    'storages',
     'haystack',
     'django_xmlrpc',
     'tinylinks',
@@ -90,6 +113,30 @@ WSGI_APPLICATION = 'ehw_io_public.wsgi.application'
 # }
 # 
 
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'xblog.pipeline.debug',
+    'social.pipeline.social_auth.social_uid',
+    'xblog.pipeline.debug',
+    'social.pipeline.social_auth.auth_allowed',
+    'xblog.pipeline.debug',
+    'social.pipeline.social_auth.social_user',
+    'xblog.pipeline.debug',
+    'social.pipeline.user.get_username',
+    'xblog.pipeline.debug',
+    'social.pipeline.user.create_user',
+    'xblog.pipeline.debug', 
+    'social.pipeline.social_auth.associate_user',
+    'xblog.pipeline.debug',  
+    'social.pipeline.social_auth.load_extra_data',
+    'xblog.pipeline.debug',  
+    'social.pipeline.user.user_details',
+    'xblog.pipeline.debug',
+    'xblog.pipeline.update_user_social_data',
+    'xblog.pipeline.debug',
+    'xblog.pipeline.create_user_blog',
+)
+ 
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DJANGO_DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -142,16 +189,8 @@ XMLRPC_METHODS = (
     ('xblog.metaWeblog.wp_getTags', 'wp.getTags'),
 )
 
-
 # check to see if the user has created a cumulus user
-if CUMULUS['USERNAME']:
-    DEFAULT_FILE_STORAGE = 'cumulus.storage.SwiftclientStorage'
-    STATICFILES_STORAGE = 'cumulus.storage.SwiftclientStaticStorage'
-STATICFILES_DIRS = (
-     os.path.join(BASE_DIR, "ehw_io_static"),
-)
-STATIC_ROOT =   os.path.expanduser("~/~/code/staticfiles/ehwio/")
-STATIC_URL = "/static/"
+
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 # the rest of this could probably be factored out...

@@ -6,7 +6,7 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'ehw_io_public.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-
+    url(r'^accounts/', include('xblog.urls'), name='profile'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^blog/', include('xblog.urls'), name='blog'),
     url(r'^xmlrpc/$', 'django_xmlrpc.views.handle_xmlrpc', name='xmlrpc'),
