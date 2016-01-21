@@ -187,6 +187,8 @@ XMLRPC_METHODS = (
     ('xblog.metaWeblog.wp_getUsersBlogs', 'wp.getUsersBlogs'),
     ('xblog.metaWeblog.wp_getOptions', 'wp.getOptions'),
     ('xblog.metaWeblog.wp_getTags', 'wp.getTags'),
+    ('xblog.metaWeblog.wp_getCategories', 'wp.getCategories'),
+    ('xblog.metaWeblog.wp_newPost', 'wp.newPost'),
 )
 
 # check to see if the user has created a cumulus user
