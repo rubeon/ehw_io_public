@@ -22,8 +22,6 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
 ALLOWED_HOSTS = os.environ.get("DJANGO_HOSTNAMES", 'localhost 127.0.0.1').split()
 
 
@@ -72,16 +70,13 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    # 'cumulus',
     'storages',
     'haystack',
     'django_xmlrpc',
-    'tinylinks',
     'markdown_deux',
     'bootstrap3',
     'xblog',
     'social.apps.django_app.default',
-    'django_libs'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -165,6 +160,7 @@ USE_TZ = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DEBUG': True,
         'DIRS': [os.environ.get("DJANGO_TEMPLATE_DIR"), 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
