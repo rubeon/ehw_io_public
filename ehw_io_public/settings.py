@@ -160,7 +160,26 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-TEMPLATE_DIRS=(os.environ.get("DJANGO_TEMPLATE_DIR"), os.path.join(BASE_DIR, "templates"),)
+# TEMPLATE_DIRS=(os.environ.get("DJANGO_TEMPLATE_DIR"), os.path.join(BASE_DIR, "templates"),)
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.environ.get("DJANGO_TEMPLATE_DIR"), 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media'
+            ],
+        },
+    },
+]
+
+
 STATIC_URL = os.environ.get("DJANGO_STATIC_URL",'/static/')
 SITE_ID = os.environ.get("DJANGO_SITE_ID")
 
