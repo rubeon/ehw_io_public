@@ -160,7 +160,6 @@ USE_TZ = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DEBUG': True,
         'DIRS': [os.environ.get("DJANGO_TEMPLATE_DIR"), 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
