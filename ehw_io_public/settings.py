@@ -41,7 +41,7 @@ if os.environ.get("CUMULUS_USERNAME"):
     }
     DEFAULT_FILE_STORAGE = 'cumulus.storage.SwiftclientStorage'
     STATICFILES_STORAGE = 'cumulus.storage.SwiftclientStaticStorage'
-    
+
 if os.environ.get("AWS_STORAGE_BUCKET_NAME"):
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
@@ -106,7 +106,7 @@ WSGI_APPLICATION = 'ehw_io_public.wsgi.application'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
-# 
+#
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
@@ -120,18 +120,18 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.get_username',
     'xblog.pipeline.debug',
     'social.pipeline.user.create_user',
-    'xblog.pipeline.debug', 
+    'xblog.pipeline.debug',
     'social.pipeline.social_auth.associate_user',
-    'xblog.pipeline.debug',  
+    'xblog.pipeline.debug',
     'social.pipeline.social_auth.load_extra_data',
-    'xblog.pipeline.debug',  
+    'xblog.pipeline.debug',
     'social.pipeline.user.user_details',
     'xblog.pipeline.debug',
     'xblog.pipeline.update_user_social_data',
     'xblog.pipeline.debug',
     'xblog.pipeline.create_user_blog',
 )
- 
+
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DJANGO_DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -178,33 +178,7 @@ TEMPLATES = [
 STATIC_URL = os.environ.get("DJANGO_STATIC_URL",'/static/')
 SITE_ID = os.environ.get("DJANGO_SITE_ID")
 
-XMLRPC_METHODS = (
-    ('xblog.metaWeblog.blogger_deletePost', 'blogger.deletePost'),
-    ('xblog.metaWeblog.blogger_getRecentPosts', 'blogger.getRecentPosts'),
-    ('xblog.metaWeblog.blogger_getUserInfo', 'blogger.getUserInfo'),
-    ('xblog.metaWeblog.blogger_getUsersBlogs', 'blogger.getUsersBlogs'),
-    ('xblog.metaWeblog.wp_getUsersBlogs', 'wp.getUsersBlogs'),
-    ('xblog.metaWeblog.wp_getOptions', 'wp.getOptions'),
-    ('xblog.metaWeblog.metaWeblog_editPost', 'metaWeblog.editPost'),
-    ('xblog.metaWeblog.metaWeblog_getCategories', 'metaWeblog.getCategories'),
-    ('xblog.metaWeblog.metaWeblog_getPost', 'metaWeblog.getPost'),
-    ('xblog.metaWeblog.metaWeblog_getRecentPosts', 'metaWeblog.getRecentPosts'),
-    ('xblog.metaWeblog.metaWeblog_getUsersBlogs', 'metaWeblog.getUsersBlogs'),
-    ('xblog.metaWeblog.metaWeblog_newMediaObject', 'metaWeblog.newMediaObject'),
-    ('xblog.metaWeblog.metaWeblog_newPost', 'metaWeblog.newPost'),
-    ('xblog.metaWeblog.mt_getCategoryList', 'mt.getCategoryList'),
-    ('xblog.metaWeblog.mt_getPostCategories', 'mt.getPostCategories'),
-    ('xblog.metaWeblog.mt_publishPost', 'mt.publishPost'),
-    ('xblog.metaWeblog.mt_setPostCategories', 'mt.setPostCategories'),
-    ('xblog.metaWeblog.mt_supportedMethods', 'mt.supportedMethods'),
-    ('xblog.metaWeblog.mt_supportedTextFilters', 'mt.supportedTextFilters'),
-    ('xblog.metaWeblog.wp_getUsersBlogs', 'wp.getUsersBlogs'),
-    ('xblog.metaWeblog.wp_getOptions', 'wp.getOptions'),
-    ('xblog.metaWeblog.wp_getTags', 'wp.getTags'),
-    ('xblog.metaWeblog.wp_getCategories', 'wp.getCategories'),
-    ('xblog.metaWeblog.wp_newPost', 'wp.newPost'),
-)
-
+from xblog.xmlrpc_settings import XMLRPC_METHODS
 # check to see if the user has created a cumulus user
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -233,7 +207,7 @@ CACHES = {
          'TIMEOUT':os.environ.get("DJANGO_CACHE_TIMEOUT",1),
      }
  }
- 
+
 EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "localhost")
 EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "25")
 
