@@ -10,3 +10,4 @@ markdown2==2.3.0
 pytz==2014.10
 textstat==0.1.6
 wsgiref==0.1.2
+https://github.com/rubeon/django-xblog/archive/master.zip
