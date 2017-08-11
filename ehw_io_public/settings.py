@@ -76,7 +76,7 @@ INSTALLED_APPS = (
     'markdown_deux',
     'bootstrap3',
     'xblog',
-    'social.apps.django_app.default',
+    'social_django',
 )
 
 MIDDLEWARE_CLASSES = (
