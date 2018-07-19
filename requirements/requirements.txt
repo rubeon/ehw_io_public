@@ -6,8 +6,8 @@ django-bootstrap3==5.1.1
 django-markdown-deux==1.0.5
 django-xmlrpc==0.1.5
 html2text==2014.12.29
-markdown2==2.3.0
+markdown2==2.3.5
 pytz==2014.10
 textstat==0.1.6
 wsgiref==0.1.2
-https://github.com/rubeon/django-xblog/archive/master.zip
+django-xblog
