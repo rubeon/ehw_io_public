@@ -1,6 +1,3 @@
-[submodule "xblog"]
-	path = xblog
-	url = https://github.com/rubeon/xblog
 [submodule "ehw_io_templates"]
 	path = ehw_io_templates
 	url = https://github.com/rubeon/ehw_io_templates
