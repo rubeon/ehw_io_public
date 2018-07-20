@@ -178,7 +178,7 @@ TEMPLATES = [
 
 
 STATIC_URL = os.environ.get("DJANGO_STATIC_URL",'/static/')
-SITE_ID = os.environ.get("DJANGO_SITE_ID")
+SITE_ID = os.environ.get("DJANGO_SITE_ID", 1)
 
 from xblog.xmlrpc_settings import XMLRPC_METHODS
 # check to see if the user has created a cumulus user
