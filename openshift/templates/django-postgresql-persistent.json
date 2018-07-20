@@ -2,23 +2,23 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "django-psql-persistent",
+    "name": "django-ehwio-persistent",
     "annotations": {
-      "openshift.io/display-name": "Django + PostgreSQL",
-      "description": "An example Django application with a PostgreSQL database. For more information about using this template, including OpenShift considerations, see https://github.com/openshift/django-ex/blob/master/README.md.",
+      "openshift.io/display-name": "EHW.io CICD Demo",
+      "description": "An example Django application with a PostgreSQL database. For more information about using this template, including OpenShift considerations, see https://github.com/rubeon/ehw_io_public/README.md.",
       "tags": "quickstart,python,django",
       "iconClass": "icon-python",
       "openshift.io/long-description": "This template defines resources needed to develop a Django based application, including a build configuration, application deployment configuration, and database deployment configuration.",
       "openshift.io/provider-display-name": "Red Hat, Inc.",
-      "openshift.io/documentation-url": "https://github.com/openshift/django-ex",
+      "openshift.io/documentation-url": "https://github.com/rubeon/ehw_io_public",
       "openshift.io/support-url": "https://access.redhat.com",
       "template.openshift.io/bindable": "false"
     }
   },
   "message": "The following service(s) have been created in your project: ${NAME}, ${DATABASE_SERVICE_NAME}.\n\nFor more information about using this template, including OpenShift considerations, see https://github.com/openshift/django-ex/blob/master/README.md.",
   "labels": {
-      "template": "django-psql-persistent",
-      "app": "django-psql-persistent"
+      "template": "django-ehwio-persistent",
+      "app": "django-ehwio-persistent"
   },
   "objects": [
     {
@@ -160,7 +160,7 @@
             "imageChangeParams": {
               "automatic": true,
               "containerNames": [
-                "django-psql-persistent"
+                "django-ehwio-persistent"
               ],
               "from": {
                 "kind": "ImageStreamTag",
@@ -186,7 +186,7 @@
           "spec": {
             "containers": [
               {
-                "name": "django-psql-persistent",
+                "name": "django-ehwio-persistent",
                 "image": " ",
                 "ports": [
                   {
@@ -294,7 +294,7 @@
       "spec": {
         "ports": [
           {
-            "name": "postgresql",
+            "name": "ehwio-postgresql",
             "port": 5432,
             "targetPort": 5432
           }
@@ -324,12 +324,12 @@
             "imageChangeParams": {
               "automatic": true,
               "containerNames": [
-                "postgresql"
+                "ehwio-postgresql"
               ],
               "from": {
                 "kind": "ImageStreamTag",
                 "namespace": "${NAMESPACE}",
-                "name": "postgresql:${POSTGRESQL_VERSION}"
+                "name": "ehwio-postgresql:${POSTGRESQL_VERSION}"
               }
             }
           },
@@ -359,7 +359,7 @@
             ],
             "containers": [
               {
-                "name": "postgresql",
+                "name": "ehwio-postgresql",
                 "image": " ",
                 "ports": [
                   {
@@ -428,7 +428,7 @@
       "displayName": "Name",
       "description": "The name assigned to all of the frontend objects defined in this template.",
       "required": true,
-      "value": "django-psql-persistent"
+      "value": "django-ehwio-persistent"
     },
     {
       "name": "NAMESPACE",
@@ -477,7 +477,7 @@
       "displayName": "Git Repository URL",
       "required": true,
       "description": "The URL of the repository with your application source code.",
-      "value": "https://github.com/openshift/django-ex.git"
+      "value": "https://github.com/rubeon/ehw_io_public.git"
     },
     {
       "name": "SOURCE_REPOSITORY_REF",
@@ -506,7 +506,7 @@
       "name": "DATABASE_SERVICE_NAME",
       "displayName": "Database Service Name",
       "required": true,
-      "value": "postgresql"
+      "value": "ehwio-postgresql"
     },
     {
       "name": "DATABASE_ENGINE",
