@@ -14,7 +14,6 @@ import uuid
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -24,7 +23,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", str(uuid.uuid1()))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_HOSTNAMES", 'localhost 127.0.0.1').split()
+ALLOWED_HOSTS = os.environ.get("DJANGO_HOSTNAMES", '*').split()
 
 
 # Application definition
