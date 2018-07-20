@@ -1,0 +1,13 @@
+{% extends "xblog/post_archive.html" %}
+<!-- /templates/xblog/post_detail.html -->
+{% load markdown_deux_tags %}
+{% block extratitle %}{{ object.title }}{% endblock %}
+{% block yearnav %}&nbsp;&rsaquo;<a href="../../../">{{object.pub_date|date:"Y"}}</a>{% endblock %}{% block monthnav %}&nbsp;&rsaquo;<a href="../../">{{object.pub_date|date:"F"}}</a>{% endblock %}{% block daynav %}&nbsp;&rsaquo;<a href="../">{{object.pub_date|date:"d"}}</a>{% endblock %}
+{% block extrarightnav %}
+	
+{% endblock %}	
+{% block maincontent %}
+<!-- a post -->
+{% include "includes/post_template.txt" %}
+    
+{% endblock %}
