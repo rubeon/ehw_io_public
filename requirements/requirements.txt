@@ -14,3 +14,5 @@ django-xblog
 django-storages
 django-haystack
 python-social-auth[django]
+django-storages
+Whoosh

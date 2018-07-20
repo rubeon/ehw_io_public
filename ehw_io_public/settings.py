@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import uuid
+import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -24,9 +25,14 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", str(uuid.uuid1()))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_HOSTNAMES", 'localhost 127.0.0.1').split()
+DJANGO_HOSTNAMES = os.environ.get('DJANGO_HOSTNAMES', None)
 
+if not DJANGO_HOSTNAMES:
+    import socket
+    DJANGO_HOSTNAMES = "%s localhost 127.0.0.1" % (socket.gethostname())
 
+ALLOWED_HOSTS = DJANGO_HOSTNAMES.split()
+ 
 # Application definition
 
 if os.environ.get("CUMULUS_USERNAME"):
@@ -78,7 +84,8 @@ INSTALLED_APPS = (
     'markdown_deux',
     'bootstrap3',
     'xblog',
-    'social.apps.django_app.default',
+    # 'social.apps.django_app.default',
+    'social_django'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -162,7 +169,7 @@ USE_TZ = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.environ.get("DJANGO_TEMPLATE_DIR"), 'templates'],
+        'DIRS': [os.environ.get("DJANGO_TEMPLATE_DIR"), 'ehw_io_templates', 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -178,7 +185,7 @@ TEMPLATES = [
 
 
 STATIC_URL = os.environ.get("DJANGO_STATIC_URL",'/static/')
-SITE_ID = os.environ.get("DJANGO_SITE_ID")
+SITE_ID = os.environ.get("DJANGO_SITE_ID", 1)
 
 from xblog.xmlrpc_settings import XMLRPC_METHODS
 # check to see if the user has created a cumulus user
@@ -225,8 +232,8 @@ AUTHENTICATION_BACKENDS = (
 )
 DEFAULT_FROM_EMAIL = os.environ.get("DJANGO_FROM_EMAIL", "Helpdesk <helpdesk@ehw.io>")
 SOCIAL_AUTH_URL_NAMESPACE = os.environ.get('DJANGO_SOCIAL_AUTH_URL_NAMESPACE', 'social')
-SOCIAL_AUTH_TWITTER_KEY = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_KEY')
-SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_SECRET')
+SOCIAL_AUTH_TWITTER_KEY = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_KEY', str(uuid.uuid1()))
+SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_SECRET', str(uuid.uuid1()))
 
 # all that loggin'
 
