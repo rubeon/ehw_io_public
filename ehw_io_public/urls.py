@@ -1,8 +1,14 @@
+"""
+This is the main site URL definitionself.
+
+To map a path to a fuction, add it to the 'urlpatters' list below
+"""
+
+
 import xblog.urls
 import social.apps.django_app.urls
 import haystack.urls
 
-from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django_xmlrpc.views import handle_xmlrpc
