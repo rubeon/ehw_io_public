@@ -12,28 +12,29 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 import uuid
 
+import xblog.xmlrpc_settings
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', str(uuid.uuid1()))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = os.environ.get('DEBUG', True)
 ALLOWED_HOSTS = os.environ.get('DJANGO_HOSTNAMES', '*').split()
 
+XMLRPC_METHODS = []
+XMLRPC_METHODS.extend(xblog.xmlrpc_settings.XMLRPC_METHODS)
 
+MANAGERS = os.environ.get('MANAGERS', 'admin@ehw.io').split()
+ADMINS = os.environ.get('ADMINS', 'admin@ehw.io').split()
 # Application definition
-
 if os.environ.get('CUMULUS_USERNAME'):
     CUMULUS = {
         'USERNAME': os.environ.get('CUMULUS_USERNAME'),
         'API_KEY': os.environ.get('CUMULUS_PASSWORD'),
         'CONTAINER': os.environ.get('CUMULUS_CONTAINER', 'my-media-container'),
-        'STATIC_CONTAINER': os.environ.get('CUMULUS_STATIC_CONTAINER', 'my-static-container'),
+        'STATIC_CONTAINER': os.environ.get('CUMULUS_STATIC_CONTAINER',
+                                           'my-static-container'),
         'REGION': os.environ.get('CUMULUS_REGION', 'DFW'),
         'PYRAX_IDENTITY_TYPE': 'rackspace',
         'USE_PYRAX': True,
@@ -56,7 +57,7 @@ if os.environ.get('AWS_STORAGE_BUCKET_NAME'):
 
 
 STATICFILES_DIRS = (
-     os.path.join(BASE_DIR, 'ehw_io_static'),
+    os.path.join(BASE_DIR, 'ehw_io_static'),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticroot')
 STATIC_URL = '/static/'
@@ -124,8 +125,10 @@ SOCIAL_AUTH_PIPELINE = (
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DJANGO_DB_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.environ.get('DJANGO_DB_NAME', os.path.join(BASE_DIR, 'db.sqlite3')),
+        'ENGINE': os.environ.get('DJANGO_DB_ENGINE',
+                                 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('DJANGO_DB_NAME',
+                               os.path.join(BASE_DIR, 'db.sqlite3')),
         'USER': os.environ.get('DJANGO_DB_USER'),
         'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD'),
         'HOST': os.environ.get('DJANGO_DB_HOST'),
@@ -142,13 +145,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-# TEMPLATE_DIRS=(os.environ.get("DJANGO_TEMPLATE_DIR"), os.path.join(BASE_DIR, "templates"),)
+# TEMPLATE_DIRS=(os.environ.get("DJANGO_TEMPLATE_DIR"),
+# os.path.join(BASE_DIR, "templates"),)
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.environ.get('DJANGO_TEMPLATE_DIR'), 'templates'],
         'APP_DIRS': True,
+        'DEBUG' : DEBUG,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -162,10 +167,10 @@ TEMPLATES = [
 ]
 
 
-STATIC_URL = os.environ.get('DJANGO_STATIC_URL','/static/')
+STATIC_URL = os.environ.get('DJANGO_STATIC_URL', '/static/')
 SITE_ID = os.environ.get('DJANGO_SITE_ID', 1)
 
-from xblog.xmlrpc_settings import XMLRPC_METHODS
+
 # check to see if the user has created a cumulus user
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -173,32 +178,47 @@ MEDIA_URL = '/media/'
 # the rest of this could probably be factored out...
 MARKDOWN_DEUX_STYLES = {
     # default style
-    'default': {'default': {'extras': {'code-friendly': None}, 'safe_mode': 'escape'}},
+    'default': {
+        'default': {
+            'extras': {'code-friendly': None},
+            'safe_mode': 'escape'
+        }
+    },
     'flatpages' : {
         'extras': {
             'footnotes': None,
         }
     }
 }
+
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': os.environ.get('DJANGO_HAYSTACK_ENGINE', 'haystack.backends.whoosh_backend.WhooshEngine'),
-        'PATH': os.environ.get('DJANGO_HAYSTACK_PATH', os.path.join(os.path.dirname(__file__), 'whoosh_index')),
+        'ENGINE':
+            os.environ.get('DJANGO_HAYSTACK_ENGINE',
+                           'haystack.backends.whoosh_backend.WhooshEngine'),
+        'PATH':
+            os.environ.get('DJANGO_HAYSTACK_PATH',
+                           os.path.join(os.path.dirname(__file__),
+                                        'whoosh_index')),
     },
 }
 
 CACHES = {
-     'default': {
-         'BACKEND':os.environ.get('DJANGO_CACHE_BACKEND', 'django.core.cache.backends.locmem.LocMemCache'),
-         'LOCATION': os.environ.get('DJANGO_CACHE_LOCATION', '/tmp/django_cache/'),
-         'TIMEOUT':os.environ.get('DJANGO_CACHE_TIMEOUT',1),
-     }
- }
+    'default': {
+        'BACKEND':
+            os.environ.get('DJANGO_CACHE_BACKEND',
+                           'django.core.cache.backends.locmem.LocMemCache'),
+        'LOCATION':
+            os.environ.get('DJANGO_CACHE_LOCATION',
+                           '/tmp/django_cache/'),
+        'TIMEOUT':
+            os.environ.get('DJANGO_CACHE_TIMEOUT', 1),
+    }
+}
 
 EMAIL_HOST = os.environ.get('DJANGO_EMAIL_HOST', 'localhost')
 EMAIL_PORT = os.environ.get('DJANGO_EMAIL_PORT', '25')
 
-#FIXME: Add following to init env
 AUTHENTICATION_BACKENDS = (
     # 'social.backends.open_id.OpenIdAuth',
     # 'social.backends.google.GoogleOpenId',
@@ -208,10 +228,14 @@ AUTHENTICATION_BACKENDS = (
     # 'social.backends.yahoo.YahooOpenId',
     'django.contrib.auth.backends.ModelBackend',
 )
-DEFAULT_FROM_EMAIL = os.environ.get('DJANGO_FROM_EMAIL', 'Helpdesk <helpdesk@ehw.io>')
-SOCIAL_AUTH_URL_NAMESPACE = os.environ.get('DJANGO_SOCIAL_AUTH_URL_NAMESPACE', 'social')
-SOCIAL_AUTH_TWITTER_KEY = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_KEY')
-SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_SECRET')
+DEFAULT_FROM_EMAIL = \
+    os.environ.get('DJANGO_FROM_EMAIL', 'Helpdesk <helpdesk@ehw.io>')
+SOCIAL_AUTH_URL_NAMESPACE = \
+    os.environ.get('DJANGO_SOCIAL_AUTH_URL_NAMESPACE', 'social')
+SOCIAL_AUTH_TWITTER_KEY = \
+    os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_KEY')
+SOCIAL_AUTH_TWITTER_SECRET = \
+    os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_SECRET')
 
 # all that loggin'
 
@@ -237,16 +261,6 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'xblog.log'),
             'formatter': 'verbose',
         },
-         # 'logstash': {
-         #      'level': 'DEBUG',
-         #      'class': 'logstash.LogstashHandler',
-         #      'host': 'localhost',
-         #      'port': 5000, # Default value: 5959
-         #      'version': 0, # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
-         #      'message_type': 'logstash',  # 'type' field in logstash message. Default value: 'logstash'.
-         #      'fqdn': False, # Fully qualified domain name. Default value: false.
-         #      'tags': ['ehwio_dev', 'django'], # list of tags. Default: None.
-         #  },
     },
     'loggers': {
         'django': {
@@ -258,25 +272,25 @@ LOGGING = {
             'handlers': ['xblog_handler'],
             'level': DEBUG and 'DEBUG' or 'INFO',
         },
-          'django.request': {
-              'handlers': ['requestfile'],
-              'level': DEBUG and 'DEBUG' or 'INFO',
-              'propagate': True,
-          },
-          'xmlrpc': {
-              'handlers': ['xblog_handler',],
-              'level' : DEBUG and 'DEBUG' or 'INFO',
-              'propagate' : True,
-          }
+        'django.request': {
+            'handlers': ['requestfile'],
+            'level': DEBUG and 'DEBUG' or 'INFO',
+            'propagate': True,
+        },
+        'xmlrpc': {
+            'handlers': ['xblog_handler',],
+            'level' : DEBUG and 'DEBUG' or 'INFO',
+            'propagate' : True,
+        }
 
     },
     'formatters': {
-            'verbose': {
-                'format' : '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s',
-                'datefmt' : '%d/%b/%Y %H:%M:%S'
-            },
-            'simple': {
-                'format': '%(levelname)s %(message)s'
-            },
+        'verbose': {
+            'format' : '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s',
+            'datefmt' : '%d/%b/%Y %H:%M:%S'
         },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
 }
