@@ -93,16 +93,16 @@ objects:
               git:
                   uri: "${SOURCE_REPOSITORY_URL}"
                   ref: "${SOURCE_REPOSITORY_REF}"
-        strategy:
-            type: Source
-            sourceStrategy:
-                from:
-                    kind: ImageStream
-                    namespace: "${NAMESPACE}"
-                    name: python:${PYTHON_VERSION}"
-                env:
-                    - name: PIP_INDEX_URL
-                      value: ${PIP_INDEX_URL}
+          strategy:
+              type: Source
+              sourceStrategy:
+                  from:
+                      kind: ImageStream
+                      namespace: "${NAMESPACE}"
+                      name: python:${PYTHON_VERSION}"
+                  env:
+                      - name: PIP_INDEX_URL
+                        value: ${PIP_INDEX_URL}
         triggers:
             - type: ImageChange
             - type: ConfigChange
