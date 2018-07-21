@@ -153,7 +153,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.environ.get('DJANGO_TEMPLATE_DIR'), 'templates'],
         'APP_DIRS': True,
-        'DEBUG' : DEBUG,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
