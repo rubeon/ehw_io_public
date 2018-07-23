@@ -16,3 +16,7 @@ django-storages
 django-haystack
 python-social-auth[django]
 Whoosh
+mysqlclient
+PyYAML
+python-memcached
+elasticsearch>=5.0.0,<6.0.0
