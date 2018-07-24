@@ -6,32 +6,19 @@
 
     <form method="get" action=".">
         {% bootstrap_form form %}
-
-{% comment %}
-
-        <table>
-            {{ form.as_table }}
-            <tr>
-                <td>&nbsp;</td>
-                <td>
-                    <input type="submit" value="Search">
-                </td>
-            </tr>
-        </table>
-
-{% endcomment %}
-
         {% if query %}
             <h3>Results</h3>
 
             {% for result in page.object_list %}
-                <h3>
-                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
-                    <p>## {% highlight result.summary with query %}{{ result.summary }}##</p>
+	    <article>
+		    <header>
+			    <h3><a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a></h3>
+	            </header>
 
-}}"
+                    <p>{% highlight result.object.get_full_body with query html_tag "mark" max_length 100 %}</p>
+	    </article>
+        <!-- end search result -->
 
-                </h3>
             {% empty %}
                 <p>No results found.</p>
             {% endfor %}
@@ -39,8 +26,6 @@
             {# Show some example queries to run, maybe query syntax, something else? #}
         {% endif %}
     </form>
-
-
 <!-- begin pager -->
 {% with page as page_obj %}
         <nav>
@@ -63,5 +48,4 @@
         </nav>
 {% endwith %}
 <!-- end pager -->
-
 {% endblock %}

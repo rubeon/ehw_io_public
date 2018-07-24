@@ -42,7 +42,7 @@ settings.configure()
 
 with open('test.csv', 'rb') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=';')
-    for row in itertools.islice(reader, 200):
+    for row in itertools.islice(reader, 10):
     # for row in reader:
         try:
             row['pub_date'] = "%s" % get_date() # .strftime('%m/%d/%Y %I:%M %p %Z')
