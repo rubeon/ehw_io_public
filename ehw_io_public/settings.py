@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', str(uuid.uuid1()))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = os.environ.get('DEBUG', 'True').lower() in ['true', 'yes', '1']
 ALLOWED_HOSTS = os.environ.get('DJANGO_HOSTNAMES', '*').split()
 
 XMLRPC_METHODS = []
@@ -79,6 +79,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'xblog',
     'social_django',
+    'ehwio'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -201,6 +202,15 @@ HAYSTACK_CONNECTIONS = {
                                         'whoosh_index')),
     },
 }
+
+if os.environ.get('DJANGO_HAYSTACK_URL'):
+    HAYSTACK_CONNECTIONS['default']['URL'] = \
+        os.environ.get('DJANGO_HAYSTACK_URL')
+
+if os.environ.get('DJANGO_HAYSTACK_INDEX_NAME'):
+    HAYSTACK_CONNECTIONS['default']['INDEX_NAME'] = \
+        os.environ.get('DJANGO_HAYSTACK_INDEX_NAME')
+
 
 CACHES = {
     'default': {
