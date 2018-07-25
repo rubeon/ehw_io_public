@@ -273,16 +273,7 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'xblog.log'),
             'formatter': 'verbose',
         },
-        'logstash': {
-            'level': 'WARNING',
-            'class': 'logstash.TCPLogstashHandler',
-            'host': os.environ.get('DJANGO_LOGSTASH_HOST', 'localhost'),
-            'port': int(os.environ.get('DJANGO_LOGSTASH_HOST', 5959)), # Default value: 5959
-            'version': 1, # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
-            'message_type': os.environ.get('DJANGO_LOGSTASH_MESSAGE_TYPE', 'django'),  # 'type' field in logstash message. Default value: 'logstash'.
-            'fqdn': os.environ.get('DJANGO_LOGSTASH_FQDN', False), # Fully qualified domain name. Default value: false.
-            'tags': ['django.request'], # list of tags. Default: None.
-        },
+
     },
     'loggers': {
         'django': {
@@ -295,7 +286,7 @@ LOGGING = {
             'level': DEBUG and 'DEBUG' or 'INFO',
         },
         'django.request': {
-            'handlers': ['requestfile', 'logstash'],
+            'handlers': ['requestfile'],
             'level': DEBUG and 'DEBUG' or 'INFO',
             'propagate': True,
         },
@@ -317,4 +308,14 @@ LOGGING = {
 }
 
 if os.environ.get('DJANGO_LOGSTASH_HOST', None):
+    LOGGING['handlers']['logstash'] = {
+        'level': 'WARNING',
+        'class': 'logstash.TCPLogstashHandler',
+        'host': os.environ.get('DJANGO_LOGSTASH_HOST', 'localhost'),
+        'port': int(os.environ.get('DJANGO_LOGSTASH_HOST', 5959)), # Default value: 5959
+        'version': 1, # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
+        'message_type': os.environ.get('DJANGO_LOGSTASH_MESSAGE_TYPE', 'django'),  # 'type' field in logstash message. Default value: 'logstash'.
+        'fqdn': os.environ.get('DJANGO_LOGSTASH_FQDN', False), # Fully qualified domain name. Default value: false.
+        'tags': ['django.request'], # list of tags. Default: None.
+    }
     LOGGING['loggers']['django.request']['handlers'].append('logstash')
