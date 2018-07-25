@@ -45,6 +45,6 @@ class BlogTestCase(TestCase):
                                            categories=[category],
                                            blog=blog,
                                            status='publish',
-                                           body=record['QUOTE']
+                                           body=record['QUOTE'],
                                            text_filter='markdown')
                 post.save()

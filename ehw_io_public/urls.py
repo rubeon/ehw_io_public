@@ -21,8 +21,10 @@ urlpatterns = [
     url(r'^xmlrpc/$|^mt-xmlrpc.cgi$|^xmlrpc.php$', handle_xmlrpc, name='xmlrpc'),
     url(r'^search/', include(haystack.urls), name="search"),
     url(r'health$', health),
+    url(r'^comments/', include('django_comments.urls')),
+    url(r'^blog/', include(xblog.urls)),
     url('', include(social.apps.django_app.urls, namespace="social"), name='social'),
-    url(r'', include(xblog.urls, namespace="xblog")),
+    url(r'', include(xblog.urls, namespace='xblog')),
 ]
 
 # if settings.DEBUG:
