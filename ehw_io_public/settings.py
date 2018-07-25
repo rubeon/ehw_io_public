@@ -80,7 +80,8 @@ INSTALLED_APPS = (
     'xblog',
     'social_django',
     'django_comments',
-    'ehwio'
+    'ehwio',
+    'material',
 )
 
 MIDDLEWARE_CLASSES = (
