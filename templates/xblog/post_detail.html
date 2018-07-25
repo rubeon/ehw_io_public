@@ -1,13 +1,41 @@
 {% extends "xblog/post_archive.html" %}
 <!-- /templates/xblog/post_detail.html -->
 {% load markdown_deux_tags %}
+{% load comments %}
+
 {% block extratitle %}{{ object.title }}{% endblock %}
 {% block yearnav %}&nbsp;&rsaquo;<a href="../../../">{{object.pub_date|date:"Y"}}</a>{% endblock %}{% block monthnav %}&nbsp;&rsaquo;<a href="../../">{{object.pub_date|date:"F"}}</a>{% endblock %}{% block daynav %}&nbsp;&rsaquo;<a href="../">{{object.pub_date|date:"d"}}</a>{% endblock %}
 {% block extrarightnav %}
-	
-{% endblock %}	
+
+{% endblock %}
 {% block maincontent %}
 <!-- a post -->
+{% get_comment_count for object as comment_count %}
+
+<p>This event has {{ comment_count }} comments.</p>
+
+<a href="{% get_comment_permalink object %}">Comments</a>
+
 {% include "includes/post_template.txt" %}
-    
+
+{% if user.is_authenticated %}
+    {% get_comment_form for object as form %}
+    <form action="{% comment_form_target %}" method="POST">
+    {% csrf_token %}
+    {{ form.comment }}
+    {{ form.honeypot }}
+    {{ form.content_type }}
+    {{ form.object_pk }}
+    {{ form.timestamp }}
+    {{ form.security_hash }}
+    <input type="hidden" name="next" value="" />
+    <input type="submit" value="Add comment" id="id_submit" />
+    </form>
+{% else %}
+    <p>Please <a href="{% url 'social:begin' 'twitter' %}">log in</a> to leave a comment.</p>
+{% endif %}
+
+{% render_comment_list for object %}
+
+
 {% endblock %}

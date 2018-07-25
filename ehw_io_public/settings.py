@@ -79,6 +79,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'xblog',
     'social_django',
+    'django_comments',
     'ehwio'
 )
 
@@ -216,7 +217,7 @@ CACHES = {
     'default': {
         'BACKEND':
             os.environ.get('DJANGO_CACHE_BACKEND',
-                           'django.core.cache.backends.locmem.LocMemCache'),
+                           'django.core.cache.backends.dummy.DummyCache'),
         'LOCATION':
             os.environ.get('DJANGO_CACHE_LOCATION',
                            '/tmp/django_cache/'),
@@ -227,6 +228,8 @@ CACHES = {
 
 EMAIL_HOST = os.environ.get('DJANGO_EMAIL_HOST', 'localhost')
 EMAIL_PORT = os.environ.get('DJANGO_EMAIL_PORT', '25')
+
+
 
 AUTHENTICATION_BACKENDS = (
     # 'social.backends.open_id.OpenIdAuth',
@@ -242,9 +245,9 @@ DEFAULT_FROM_EMAIL = \
 SOCIAL_AUTH_URL_NAMESPACE = \
     os.environ.get('DJANGO_SOCIAL_AUTH_URL_NAMESPACE', 'social')
 SOCIAL_AUTH_TWITTER_KEY = \
-    os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_KEY')
+    os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_KEY', 'abc123')
 SOCIAL_AUTH_TWITTER_SECRET = \
-    os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_SECRET')
+    os.environ.get('DJANGO_SOCIAL_AUTH_TWITTER_SECRET', 'abc123')
 
 # all that loggin'
 
@@ -270,6 +273,16 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'xblog.log'),
             'formatter': 'verbose',
         },
+        'logstash': {
+            'level': 'WARNING',
+            'class': 'logstash.TCPLogstashHandler',
+            'host': os.environ.get('DJANGO_LOGSTASH_HOST', 'localhost'),
+            'port': int(os.environ.get('DJANGO_LOGSTASH_HOST', 5959)), # Default value: 5959
+            'version': 1, # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
+            'message_type': os.environ.get('DJANGO_LOGSTASH_MESSAGE_TYPE', 'django'),  # 'type' field in logstash message. Default value: 'logstash'.
+            'fqdn': os.environ.get('DJANGO_LOGSTASH_FQDN', False), # Fully qualified domain name. Default value: false.
+            'tags': ['django.request'], # list of tags. Default: None.
+        },
     },
     'loggers': {
         'django': {
@@ -282,7 +295,7 @@ LOGGING = {
             'level': DEBUG and 'DEBUG' or 'INFO',
         },
         'django.request': {
-            'handlers': ['requestfile'],
+            'handlers': ['requestfile', 'logstash'],
             'level': DEBUG and 'DEBUG' or 'INFO',
             'propagate': True,
         },
@@ -290,8 +303,7 @@ LOGGING = {
             'handlers': ['xblog_handler',],
             'level' : DEBUG and 'DEBUG' or 'INFO',
             'propagate' : True,
-        }
-
+        },
     },
     'formatters': {
         'verbose': {
@@ -303,3 +315,6 @@ LOGGING = {
         },
     },
 }
+
+if os.environ.get('DJANGO_LOGSTASH_HOST', None):
+    LOGGING['loggers']['django.request']['handlers'].append('logstash')
