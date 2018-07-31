@@ -124,11 +124,17 @@ SOCIAL_AUTH_PIPELINE = (
     'xblog.pipeline.debug',
     'xblog.pipeline.create_user_blog',
 )
+DB_ENGINE = os.environ.get('DJANGO_DB_ENGINE', None)
+
+if DB_ENGINE:
+    if not DB_ENGINE.startswith('django.db.backends'):
+        DB_ENGINE = "django.db.backends.%s" % DB_ENGINE
+else:
+    DB_ENGINE = 'django.db.backends.sqlite3'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DJANGO_DB_ENGINE',
-                                 'django.db.backends.sqlite3'),
+        'ENGINE': DB_ENGINE,
         'NAME': os.environ.get('DJANGO_DB_NAME',
                                os.path.join(BASE_DIR, 'db.sqlite3')),
         'USER': os.environ.get('DJANGO_DB_USER'),
