@@ -27,10 +27,3 @@ urlpatterns = [
     url(r'', include(xblog.urls, namespace='xblog')),
 ]
 
-# if settings.DEBUG:
-#     # static files (images, css, javascript, etc.)
-#     urlpatterns += patterns('',
-#         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-#         'document_root': settings.MEDIA_ROOT}))
-#
-# urlpatterns +=    patterns('', url(r'^$', include('xblog.urls')),)
