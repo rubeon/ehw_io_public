@@ -1,2 +1,2 @@
-APP_MODULE="ehw_io_public.wsgi:application"
+APP_MODULE=ehw_io_public.wsgi:application
 
