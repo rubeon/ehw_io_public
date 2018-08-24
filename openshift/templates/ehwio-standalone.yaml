@@ -1,0 +1,310 @@
+apiVersion: v1
+kind: Template
+labels:
+    template: ehwio-public-dev
+    app: ehwio-public-dev
+    deployment: ${NAME}-ehwio-public-dev
+# message: The following services have been created for ${NAME}
+metadata:
+    name: ehwio-public-standalone
+    annotations:
+        description: OpenShift Template for EHW.io, a Django application, running in Django's development mode
+        iconClass: icon-django
+        # "openshift.io/documentation-url": https://github.com/rubeon/ehw_io_public
+        # "openshift.io/display-name": EHW.io Standalone
+        # "openshift.io/long-description": Deploys Django and EHW.io
+        # "openshift.io/provider-display-name": EHW.io, Ltd.
+        # "openshift.io/support-url": https://ehw.io
+    # tags: quickstart,python,django
+    # "template.openshift.io/bindable": false
+objects:
+    - kind: Secret
+      apiVersion: v1
+      metadata:
+          name: "${NAME}-secret"
+      stringData:
+          django-secret-key: "${DJANGO_SECRET_KEY}"
+          github-webhook-secret: "${GITHUB_WEBHOOK_SECRET}"
+    - kind: Service
+      apiVersion: v1
+      metadata:
+        name: "${NAME}-app"
+        annotations:
+          description: Exposes and load balances the application pods
+      spec:
+        ports:
+          - name: app
+            port: 8080
+            targetPort: 8080
+        selector:
+            name: "${NAME}-app"
+    - kind: Service
+      apiVersion: v1
+      metadata:
+          name: "${NAME}-proxy"
+          annotations:
+            description: Exposes and load balances the application pods
+      spec:
+        ports:
+          - name: proxy
+            port: 8000
+            targetPort: 8000
+        selector:
+            name: "${NAME}-proxy"
+    - kind: Route
+      apiVersion: v1
+      metadata:
+          name: "${NAME}-route"
+      spec:
+          host: "${APPLICATION_DOMAIN}"
+          to:
+              kind: Service
+              name: "${NAME}-proxy"
+    - kind: ImageStream
+      apiVersion: v1
+      metadata:
+        name: "${NAME}-proxy-imagestream"
+        annotations:
+          description: Image for the proxy server for this application image
+    - kind: BuildConfig
+      apiVersion: v1
+      metadata:
+        annotations:
+          description: Build proxy image for this application
+        name: "${NAME}-proxy-buildconfig"
+      spec:
+        output:
+          to: 
+            kind: ImageStream
+            name: "${NAME}-proxy-imagestream"
+        source:
+          type: Git
+          contextDir: "${CONTEXT_DIR}"
+          git:
+            uri: "${SOURCE_REPOSITORY_URL}"
+            ref: "${SOURCE_REPOSITORY_REF}"
+        strategy:
+          type: Source
+          sourceStrategy:
+            from:
+              kind: ImageStream
+              namespace: "${NAMESPACE}"
+              name: nginx
+        triggers:
+          - type: ImageChange
+          - type: ConfigChange
+          - type: GitHub
+            github:
+                secret: "${GITHUB_WEBHOOK_SECRET}"
+    - kind: DeploymentConfig
+      apiVersion: v1
+      metadata:
+        name: "${NAME}-proxy-deploymentconfig"
+        annotations:
+          description: Defines how to deploy the proxy server
+      spec:
+        replicas: 1
+        selector:
+          name: "${NAME}-proxy"
+        strategy:
+          type: Recreate
+        triggers:
+          - type: ImageChange
+            imageChangeParams:
+              automatic: true
+              containerNames:
+                - "${NAME}-proxy"
+              from:
+                kind: ImageStreamTag
+                name: "${NAME}-proxy-imagestream:latest"
+        template:
+          metadata:
+            name: "${NAME}-proxy"
+            labels:
+              name: "${NAME}-proxy"
+          spec:
+            containers:
+              - image: " "
+                livenessProbe: 
+                  httpGet:
+                    path: /
+                    port: 8000
+                name: "${NAME}-proxy"
+                ports:
+                  - containerPort: 8080
+                  - containerPort: 8000
+                readinessProbe:
+                  httpGet:
+                    path: /
+                    port: 8000
+                  initialDelaySeconds: 3
+                  timeoutSeconds: 3
+                env:
+                  - name: APP_SERVICE
+                    value: "${NAME}-app"  
+        triggers:
+          - type: ImageChange
+            imageChangeParams:
+              automatic: true
+              containerNames:
+                  - "${NAME}-proxy"
+              from:
+                  kind: ImageStreamTag
+                  name: "${NAME}-proxy-imagestream:latest"
+          - type: ConfigChange
+
+    - kind: ImageStream
+      apiVersion: v1
+      metadata:
+          name: "${NAME}-imagestream"
+          annotations:
+              description: Keeps track of changes in the application image
+    - kind: BuildConfig
+      apiVersion: v1
+      metadata:
+          annotations:
+              description: Defines how to build the application
+              # "template.alpha.openshift.io/wait-for-ready": True
+          name: "${NAME}-buildconfig"
+      spec:
+          output:
+              to:
+                  kind: ImageStream
+                  name: "${NAME}-imagestream"
+          postCommit:
+              script: "./manage.py test"
+          source:
+              type: Git
+              contextDir: "${CONTEXT_DIR}"
+              git:
+                  uri: "${SOURCE_REPOSITORY_URL}"
+                  ref: "${SOURCE_REPOSITORY_REF}"
+          strategy:
+              type: Source
+              sourceStrategy:
+                  from:
+                      kind: ImageStream
+                      namespace: "${NAMESPACE}"
+                      name: python
+                  env:
+                      - name: PIP_INDEX_URL
+                        value: ${PIP_INDEX_URL}
+          triggers:
+            - type: ImageChange
+            - type: ConfigChange
+            - type: GitHub
+              github:
+                  secret: "${GITHUB_WEBHOOK_SECRET}"
+    - kind: DeploymentConfig
+      apiVersion: v1
+      metadata:
+          name: "${NAME}-app-deploymentconfig"
+          annotations:
+              description: Defines how to deploy the application server
+              # "template.alpha.openshift.io/wait-for-ready": true
+      spec:
+          replicas: 1
+          selector:
+              name: "${NAME}-app"
+          strategy:
+              type: Recreate
+          triggers:
+              - type: ImageChange
+                imageChangeParams:
+                    automatic: true
+                    containerNames:
+                        - "${NAME}-app"
+                    from:
+                        kind: ImageStreamTag
+                        name: "${NAME}-imagestream:latest"
+              - type: ConfigChange
+          template:
+              metadata:
+                  name: "${NAME}-app"
+                  labels:
+                      name: "${NAME}-app"
+              spec:
+                  containers:
+                      - env:
+                          - name: DJANGO_SECRET_KEY
+                            valueFrom:
+                                secretKeyRef:
+                                    key: django-secret-key
+                                    name: "${NAME}-secret"
+                        image: " "
+                        livenessProbe:
+                          httpGet:
+                              path: /health
+                              port: 8080
+                        name: "${NAME}-app"
+                        ports:
+                          - containerPort: 8080
+                        readinessProbe:
+                          httpGet:
+                              path: /health
+                              port: 8080
+                          initialDelaySeconds: 3
+                          timeoutSeconds: 3
+                        resources:
+                          limits:
+                              memory: "${MEMORY_LIMIT}"
+          triggers:
+              - type: ImageChange
+                imageChangeParams:
+                  automatic: true
+                  containerNames:
+                      - "${NAME}-app"
+                  from:
+                      kind: ImageStreamTag
+                      name: "${NAME}-imagestream:latest"
+              - type: ConfigChange
+parameters:
+    - name: NAME
+      displayName: Name
+      description: The name assigned to all of the frontend objects defined in this template.
+      required: True
+      value: ehwio-standalone
+    - name: NAMESPACE
+      description: The OpenShift Namespace where the ImageStream resides.
+      displayName: Namespace
+      required: True
+      value: 'openshift'
+    - name: PYTHON_VERSION
+      description: Version of Python image to be used
+      displayName: Version of python image
+      required: True
+      value: '3'
+    - name: MEMORY_LIMIT
+      description: Maximum amount of memory the Django container can use.
+      displayName: Memory limit
+      required: True
+      value: 512Mi
+    - name: SOURCE_REPOSITORY_URL
+      displayName: Git Repository URL
+      description: The URL of the repository with your application source code.
+      required: True
+      value: https://github.com/rubeon/ehw_io_public
+    - name: SOURCE_REPOSITORY_REF
+      description: Branch or tag name for the release to be deployed
+      displayName: Git Reference
+    - name: CONTEXT_DIR
+      description: Set this to the relative path to your project if it is not in the root of your repository
+      displayName: Context Directory
+    - name: APPLICATION_DOMAIN
+      displayName: Application Hostname
+      description: The exposed hostname that will route to the Django service, if left blank a value will be defaulted.
+      value: ''
+    - name: GITHUB_WEBHOOK_SECRET
+      displayName: GitHub WebHook Secret
+      description: Github trigger secret.  A difficult to guess string encoded as part of the webhook URL.  Not encrypted.
+      from: "[a-zA-Z0-9]{40}"
+      generate: expression
+    - name: DJANGO_SECRET_KEY
+      description: Set this to a long random string
+      displayName: Django Secret Key
+      from: "[\\w]{50}"
+      generate: expression
+    - name: PIP_INDEX_URL
+      description: The custom PyPi index URL
+      displayName: Custom PyPi Index URL
+      value: ''
