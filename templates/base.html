@@ -7,7 +7,7 @@
     {% bootstrap_css %}
     {% bootstrap_javascript jquery=1 %}
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static "css/sticky-footer-navbar.css" %}" type="text/css" media="screen" title="footer style" charset="utf-8">
+    <link rel="stylesheet" href="{% static "ehwio-css/sticky-footer-navbar.css" %}" type="text/css" media="screen" title="footer style" charset="utf-8">
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" type="text/css" media="screen" title="footer style" charset="utf-8">
     <link rel="stylesheet" href="{% static "ehwio-css/main.css" %}" type="text/css" media="screen" title="no title" charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,9 +15,7 @@
     {% block extrahead %}<!-- extra header stuff -->{% endblock %}
     {% block extrajs %}<!-- extra javascript stuff -->{% endblock %}
     <script type="text/javascript" src="{% static "js/utils.js" %}"></script>
-
 </head>
-
 <body>
     <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
@@ -48,10 +46,10 @@
  {% block pager %}
  <!-- base.html pager -->
  {% endblock %}
+    </div>
  <footer class="footer text-muted">
  {% block footer %}<a href="{% url "admin:login" %}">{% bootstrap_icon "log-in" %} Sign in to admin site</a> | &copy; 2014, http://ehw.io{% endblock %}</footer>
 
-    </div>
 
 </body>
 </html>
