@@ -6,13 +6,14 @@ To map a path to a fuction, add it to the 'urlpatters' list below
 
 
 import xblog.urls
-import social.apps.django_app.urls
 import haystack.urls
 
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.contrib import admin
 from django_xmlrpc.views import handle_xmlrpc
 from .views import health
+from django.conf import settings
+
 
 urlpatterns = [
     path('accounts/', include(xblog.urls), name='profile'),
@@ -21,16 +22,13 @@ urlpatterns = [
     path('xmlrpc/|mt-xmlrpc.cgi$|xmlrpc.php', handle_xmlrpc, name='xmlrpc'),
     path('search/', include(haystack.urls), name="search"),
     path('health', health),
-    path('comments/', include('django_comments.urls')),
+    path('comments/', include('django_comments.urls'), name='comments'),
     path('blog/', include(xblog.urls)),
-    path('', include(social.apps.django_app.urls, namespace="social"), name='social'),
+    #path('', include(social.apps.django_app.urls, namespace="social"), name='social'),
+    path('', include('social_django.urls', namespace='social')),
     path('', include(xblog.urls, namespace='xblog')),
 ]
 
-# if settings.DEBUG:
-#     # static files (images, css, javascript, etc.)
-#     urlpatterns += patterns('',
-#         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-#         'document_root': settings.MEDIA_ROOT}))
-#
-# urlpatterns +=    patterns('', url(r'^$', include('xblog.urls')),)
+if settings.DEBUG:
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

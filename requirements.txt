@@ -6,10 +6,10 @@ django-xmlrpc
 html2text
 markdown2
 pytz
-django-xblog
+django-xblog@git+https://github.com/rubeon/django-xblog@django-4-update
 django-storages
 django-haystack
-python-social-auth[django]
+social-auth-app-django
 Whoosh
 mysqlclient
 PyYAML
@@ -17,5 +17,5 @@ python-memcached
 elasticsearch>=5.0.0,<6.0.0
 uwsgi
 django-contrib-comments
-psycopg2
+psycopg2-binary
 gunicorn

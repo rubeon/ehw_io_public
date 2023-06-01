@@ -60,7 +60,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'ehw_io_static'),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticroot')
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 
 INSTALLED_APPS = (
@@ -97,23 +97,23 @@ WSGI_APPLICATION = 'ehw_io_public.wsgi.application'
 
 
 SOCIAL_AUTH_PIPELINE = (
-    'social.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_details',
     'xblog.pipeline.debug',
-    'social.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_uid',
     'xblog.pipeline.debug',
-    'social.pipeline.social_auth.auth_allowed',
+    # 'social_core.pipeline.social_auth.auth_allowed',
+    # 'xblog.pipeline.debug',
+    'social_core.pipeline.social_auth.social_user',
     'xblog.pipeline.debug',
-    'social.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
     'xblog.pipeline.debug',
-    'social.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
     'xblog.pipeline.debug',
-    'social.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
     'xblog.pipeline.debug',
-    'social.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
     'xblog.pipeline.debug',
-    'social.pipeline.social_auth.load_extra_data',
-    'xblog.pipeline.debug',
-    'social.pipeline.user.user_details',
+    'social_core.pipeline.user.user_details',
     'xblog.pipeline.debug',
     'xblog.pipeline.update_user_social_data',
     'xblog.pipeline.debug',
@@ -154,15 +154,19 @@ USE_TZ = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.environ.get('DJANGO_TEMPLATE_DIR'), 'templates'],
+        'DIRS': [os.environ.get('DJANGO_TEMPLATE_DIR', 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.media',
+                'social_django.context_processors.backends',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media'
+                'social_django.context_processors.login_redirect',
+
             ],
         },
     },
@@ -233,12 +237,12 @@ EMAIL_PORT = os.environ.get('DJANGO_EMAIL_PORT', '25')
 
 
 AUTHENTICATION_BACKENDS = (
-    # 'social.backends.open_id.OpenIdAuth',
-    # 'social.backends.google.GoogleOpenId',
-    # 'social.backends.google.GoogleOAuth2',
-    # 'social.backends.google.GoogleOAuth',
-    'social.backends.twitter.TwitterOAuth',
-    # 'social.backends.yahoo.YahooOpenId',
+    # 'social_django.backends.open_id.OpenIdAuth',
+    # 'social_django.backends.google.GoogleOpenId',
+    # 'social_django.backends.google.GoogleOAuth2',
+    # 'social_django.backends.google.GoogleOAuth',
+    'social_core.backends.twitter.TwitterOAuth',
+    # 'social_django.backends.yahoo.YahooOpenId',
     'django.contrib.auth.backends.ModelBackend',
 )
 DEFAULT_FROM_EMAIL = \
@@ -254,7 +258,7 @@ SOCIAL_AUTH_TWITTER_SECRET = \
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'handlers': {
         'file': {
             'level': 'INFO',
@@ -277,6 +281,10 @@ LOGGING = {
 
     },
     'loggers': {
+        'django.utils.autoreload': {
+            'handlers': ['file'],
+            'level': 'WARN',
+        },
         'django': {
             'handlers':['file'],
             'propagate': True,
@@ -320,3 +328,5 @@ if os.environ.get('DJANGO_LOGSTASH_HOST', None):
         'tags': ['django.request'], # list of tags. Default: None.
     }
     LOGGING['loggers']['django.request']['handlers'].append('logstash')
+
+LOGIN_REDIRECT_URL='/'
